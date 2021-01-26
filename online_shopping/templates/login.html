@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Login</title>
+	<link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet" type="text/css" />
+</head>
+<body>
+    <div>
+		{% with messages = get_flashed_messages() %}
+		  {% if messages %}
+			<ul class=flashes>
+			{% for message in messages %}
+			  <li>{{ message }}</li>
+			{% endfor %}
+			</ul>
+		  {% endif %}
+		{% endwith %}
+	</div>
+	<div id="product-grid">
+		<div class="txt-heading">Enter clientID</div>
+
+		<div class="product-item">
+            <form method="post" action="/confirm_login">
+                <div class="product-tile-footer">
+                    <div class="cart-action">
+                        <input type="text" class="product-quantity" name="customerID" size="10" />
+                        <input type="submit" value="Go to cart" class="btnAddAction" />
+                    </div>
+                </div>
+            </form>
+        </div>
+	
+	</div>
+</body>
+</html>

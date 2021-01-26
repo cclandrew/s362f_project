@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Payment</title>
+	<link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet" type="text/css" />
+</head>
+<body>
+	<div>
+		{% with messages = get_flashed_messages() %}
+		  {% if messages %}
+			<ul class=flashes>
+			{% for message in messages %}
+			  <li>{{ message }}</li>
+			{% endfor %}
+			</ul>
+		  {% endif %}
+		{% endwith %}
+	</div>
+
+	<div id="product-grid">
+		<div class="txt-heading">Payment</div>
+
+		<div class="product-item">
+            <form method="post" action="/confirm_payment">
+                <div class="product-tile-footer">
+                    <div class="cart-action">
+                        <input type="text" class="product-quantity" name="cardNo" size="16" />
+                        <input type="text" class="product-quantity" name="cardExpMM" size="1"/>/
+                        <input type="text" class="product-quantity" name="cardExpYY" size="1"/>
+                        <input type="submit" value="Confirm details" class="btnAddAction" />
+                    </div>
+                </div>
+            </form>
+        </div>
+	
+	</div>
+</body>
+</html>
