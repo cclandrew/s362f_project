@@ -4,6 +4,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 import time
 from random import randint
 from datetime import datetime, date, timedelta
+import re
 
 app = Flask(__name__)
 app.secret_key = "secret key"
@@ -22,6 +23,23 @@ def array_merge( first_array , second_array ):
 	elif isinstance( first_array , set ) and isinstance( second_array , set ):
 		return first_array.union( second_array )
 	return False
+
+def check_valid_credit_card_format(card):
+    parts = re.split(' |-', card)
+
+    if len(parts) == 1:
+        if len(parts[0]) != 16:
+            return False
+    elif len(parts) == 4:
+        if not all(len(part) == 4 for part in parts):
+            return False
+    else:
+        return False
+
+    if not all(part.isdigit() for part in parts):
+        return False
+
+    return True
 
 @app.before_request
 def make_session_permanent():
@@ -135,10 +153,12 @@ def confirm_payment():
     _cardNo = request.form['cardNo']
     _cardExpMM = request.form['cardExpMM']
     _cardExpYY = request.form['cardExpYY']
+
     exp_str = '01/' + _cardExpMM + '/' + _cardExpYY 
     exp_obj = datetime.strptime(str(exp_str), '%d/%m/%y').date()
     now = datetime.now().date()
-    if len(_cardNo) == 16 and exp_obj > now and request.method == 'POST':   
+
+    if check_valid_credit_card_format(_cardNo) and exp_obj > now and request.method == 'POST':   
         return redirect(url_for('.purchase'))
     else:
         flash('Card info invalid!')
@@ -168,7 +188,7 @@ def purchase():
                     cur.execute("UPDATE products SET quantityInStock = ? WHERE productID = ?",(new_quantity,individual_productID,))
                     conn.commit()
                     print 'Updated product id: ' , individual_productID , ', New quantity: ' , new_quantity
-                    break
+
                 elif old_quantity == 0:
                     print individual_productDesc, 'out of stock! replenished stock!'
                     cur.execute("UPDATE products SET quantityInStock = ? WHERE productID = ?",(restock,individual_productID,))

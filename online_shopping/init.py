@@ -21,7 +21,12 @@ cur = conn.cursor()
 # cur.execute("INSERT INTO products VALUES (008,'watermelon',20,50)")
 # cur.execute("INSERT INTO products VALUES (009,'pineapple',25,50)")
 # cur.execute("INSERT INTO products VALUES (010,'cheese',30,50)")
-# cur.execute("UPDATE products SET quantityInStock = 4 WHERE productID = 001")
+
+### Test out of stock ###
+stock = 1
+cur.execute("UPDATE products SET quantityInStock = ? WHERE productID = 001",(stock,))
+###
+
 cur.execute("SELECT * FROM products")
 print(cur.fetchall())
 
